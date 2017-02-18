@@ -3,6 +3,7 @@ package com.example.android.diksha;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +30,43 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         sunamiReportAsyn task=new sunamiReportAsyn();
         task.execute();
+
+
     }
+    private void updateUi(Words sunamiData){
+        TextView eventTextFill = (TextView)findViewById(R.id.event_fill_text_view);
+        eventTextFill.setText(sunamiData.getEvent());
+
+        TextView dateTextFill = (TextView)findViewById(R.id.date_fill_text_view);
+        dateTextFill.setText(getDateString(sunamiData.getDate()));
+
+        TextView alertTextFill = (TextView)findViewById(R.id.alert_fill_text_view);
+        alertTextFill.setText(getTsunamiAlertString(sunamiData.getAlert()));
+
+
+
+
+
+
+
+    }
+    private String getDateString(long timeInMilliseconds) {
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy 'at' HH:mm:ss z");
+        return formatter.format(timeInMilliseconds);
+    }
+
+    private String getTsunamiAlertString(int tsunamiAlert) {
+        switch (tsunamiAlert) {
+            case 0:
+                return "No";
+            case 1:
+                return "Yes";
+            default:
+                return "No data available";
+        }
+    }
+
+
 
     private class sunamiReportAsyn extends AsyncTask<URL, Void , Words>{
 
@@ -124,7 +162,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Words words) {
-            super.onPostExecute(words);
+            updateUi(words);
+
         }
     }
 }

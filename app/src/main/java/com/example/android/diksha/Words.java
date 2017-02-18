@@ -15,15 +15,15 @@ public class Words  {
         this.alert = alert;
     }
 
-    private String getEvent(){
+    public String getEvent(){
         return event;
     }
 
-    private  long getDate(){
+    public  long getDate(){
         return date;
     }
 
-    private int getAlert(){
+    public int getAlert(){
         return alert;
     }
 }
