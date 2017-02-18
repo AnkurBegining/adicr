@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
             //create url object
             URL url=createUrl(URL_DOMAIN);
             String jsonResponse="";
-            
+
 
             return null;
         }
