@@ -4,6 +4,10 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,9 +43,35 @@ public class MainActivity extends AppCompatActivity {
             }catch (Exception e){
 
             }
+            Words sunamiData = null;
+            try {
+                sunamiData = extractFromJson(jsonResponse);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
-            return null;
+            return sunamiData;
+        }
+
+        private Words extractFromJson(String jsonResponse) throws JSONException {
+            try {
+                JSONObject root = new JSONObject(jsonResponse);
+                JSONArray jsonArray= root.getJSONArray("features");
+                for(int i=0;i<jsonArray.length();i++){
+                    JSONObject firstFeature = jsonArray.getJSONObject(i);
+                    JSONObject properties =firstFeature.getJSONObject("properties");
+                    String title =properties.getString("title");
+                    long time =properties.getLong("time");
+                    int alert =properties.getInt("tsunami");
+                    Words sunamiData= new Words(title, time, alert);
+                    return sunamiData;
+                }
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+
+             return null;
         }
 
         private String makeHttpConnection(URL url) throws IOException {
